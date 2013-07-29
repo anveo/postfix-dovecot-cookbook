@@ -89,7 +89,7 @@ node.default['dovecot']['auth']['static']['userdb']['args'] = [
 node.default['dovecot']['auth']['system'] = {}
 
 # dovecot-sql.conf.ext
-node.default['dovecot']['conf']['sql']['driver'] = 'mysql'
+node.default['dovecot']['conf']['sql']['driver'] = 'pgsql'
 node.default['dovecot']['conf']['sql']['connect'] = [
   "host=#{node['postfixadmin']['database']['host']}",
   "dbname=#{node['postfixadmin']['database']['name']}",
@@ -110,7 +110,7 @@ end
 node.default['dovecot']['conf']['sql']['password_query'] = [
   'SELECT username AS user, password',
   'FROM mailbox',
-  'WHERE username = \'%u\' AND active = \'1\'',
+  'WHERE username = \'%u\' AND active = true',
 ]
 node.default['dovecot']['conf']['sql']['user_query'] = [
   'SELECT', 
@@ -121,12 +121,12 @@ node.default['dovecot']['conf']['sql']['user_query'] = [
     "concat('#{node['postfix-dovecot']['vmail']['home']}/', maildir) AS home,",
     "concat('maildir:#{node['postfix-dovecot']['vmail']['home']}/', maildir) AS mail",
   'FROM mailbox',
-  'WHERE username = \'%u\' AND active = \'1\'',
+  'WHERE username = \'%u\' AND active = true',
 ]
 
 node.default['dovecot']['conf']['sql']['iterate_query'] = [
   'SELECT username AS user',
-  'FROM mailbox WHERE active = \'1\'',
+  'FROM mailbox WHERE active = true',
 ]
 
 include_recipe 'dovecot'
